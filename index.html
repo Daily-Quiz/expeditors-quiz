@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Expeditors Daily Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #f3f6fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 32px;
+      max-width: 760px;
+      width: 90%;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      color: #002f6c;
+      margin-bottom: 16px;
+    }
+
+    .question {
+      font-size: 1.3em;
+      line-height: 1.6;
+      margin: 20px 0;
+      font-weight: 600;
+    }
+
+    .prompt {
+      margin: 16px 0;
+      color: #444;
+      font-size: 1.05em;
+    }
+
+    button {
+      background: #002f6c;
+      color: #ffffff;
+      border: none;
+      padding: 12px 26px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #004a9f;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 22px;
+      padding: 18px;
+      background: #f0f4ff;
+      border-left: 5px solid #002f6c;
+      text-align: left;
+      font-size: 1.1em;
+    }
+
+    .footer {
+      margin-top: 26px;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>🚢 Expeditors Daily Quiz</h1>
+
+    <div class="question" id="question"></div>
+
+    <div class="prompt">Do you know the answer?</div>
+
+    <button onclick="showAnswer()">Show the answer</button>
+
+    <div class="answer" id="answer"></div>
+
+    <div class="footer">
+      Refresh the page or scan again for a new question
+    </div>
+  </div>
+
+  <script>
+    const quiz = [
+      { q: "When was Expeditors founded?", a: "Expeditors was founded in 1979." },
+      { q: "Where is Expeditors headquartered?", a: "Bellevue, Washington, USA." },
+      { q: "What is Expeditors’ mission statement?", a: "To set the standard for excellence in global logistics through total commitment to quality in people and customer service, with superior financial results." },
+      { q: "What type of company is Expeditors?", a: "A service-based global logistics company." },
+      { q: "Does Expeditors own aircraft, ships, or trucks?", a: "No. Expeditors is asset-light and does not own aircraft, ships, or trucks." },
+      { q: "Name one core service provided by Expeditors.", a: "Air freight, ocean freight, customs brokerage, warehousing, or supply chain solutions." },
+      { q: "How many countries does Expeditors operate in?", a: "More than 100 countries worldwide." },
+      { q: "What is one Expeditors core cultural value?", a: "Examples include Integrity, Curiosity, Excellence, Confidence, Pride, Visionary, Attitude, or Resolute." },
+      { q: "What does Integrity represent at Expeditors?", a: "Fairness, honesty, and dignity in all relationships." },
+      { q: "What does Curiosity encourage at Expeditors?", a: "Continuous learning, investigation, and growth." },
+      { q: "What does Excellence mean at Expeditors?", a: "Going beyond what is expected in service and performance." },
+      { q: "Why does Expeditors focus on organic growth?", a: "To preserve culture and grow expertise without mergers." },
+      { q: "What does 'Declare Ownership' mean in practice?", a: "Taking responsibility, acting proactively, and solving problems." },
+      { q: "What is the main focus of Expeditors’ culture?", a: "Exceeding customer expectations." },
+      { q: "Is Expeditors a Fortune 500 company?", a: "Yes, Expeditors is a Fortune 500 company." },
+      { q: "What type of career growth does Expeditors encourage?", a: "Internal development and promotion from within." },
+      { q: "What is a key characteristic of Expeditors leadership?", a: "Long tenure and strong internal experience." },
+      { q: "Why do customers choose Expeditors?", a: "Reliable service, global reach, and logistics expertise." },
+      { q: "What industry does Expeditors operate in?", a: "Global logistics and supply chain management." },
+      { q: "What mindset supports success at Expeditors?", a: "Ownership, accountability, and customer focus." }
+    ];
+
+    const pick = quiz[Math.floor(Math.random() * quiz.length)];
+
+    document.getElementById("question").innerText = pick.q;
+    document.getElementById("answer").innerText = pick.a;
+
+    function showAnswer() {
+      document.getElementById("answer").style.display = "block";
+    }
+  </script>
+</body>
+</html>
+``
