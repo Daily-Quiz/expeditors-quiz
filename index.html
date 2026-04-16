@@ -1,136 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Expeditors QR Quiz</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Expeditors Daily Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- QR Code library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <style>
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      background:#f3f6fb;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      margin:0;
+    }
+    .card{
+      background:#fff;
+      padding:32px;
+      max-width:760px;
+      width:90%;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,.15);
+      text-align:center;
+    }
+    h1{ color:#002f6c; margin:0 0 16px; }
+    .question{
+      font-size:1.3em;
+      line-height:1.6;
+      margin:20px 0;
+      font-weight:600;
+    }
+    .prompt{
+      margin:16px 0;
+      color:#444;
+      font-size:1.05em;
+    }
+    button{
+      background:#002f6c;
+      color:#fff;
+      border:none;
+      padding:12px 26px;
+      font-size:1em;
+      border-radius:6px;
+      cursor:pointer;
+    }
+    button:hover{ background:#004a9f; }
 
-    <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f4f6f8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 30px 40px;
-            width: 100%;
-            max-width: 520px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            color: #002f6c;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #555;
-            margin-bottom: 25px;
-        }
-
-        .question {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 30px;
-        }
-
-        #qrcode {
-            margin: 20px auto;
-            width: fit-content;
-        }
-
-        .hint {
-            font-size: 14px;
-            color: #666;
-            margin-top: 20px;
-        }
-
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #999;
-        }
-    </style>
+    .answer{
+      display:none;
+      margin-top:22px;
+      padding:18px;
+      background:#f0f4ff;
+      border-left:5px solid #002f6c;
+      text-align:left;
+      font-size:1.1em;
+      white-space:pre-line;
+    }
+    .footer{
+      margin-top:26px;
+      font-size:.9em;
+      color:#666;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="card">
-        <h1>📦 Expeditors Quiz</h1>
-        <div class="subtitle">Scan the QR code to answer</div>
+  <div class="card">
+    <h1>🚢 Expeditors Daily Quiz</h1>
 
-        <div class="question" id="questionText"></div>
+    <div class="question" id="question"></div>
+    <div class="prompt">Do you know the answer?</div>
 
-        <div id="qrcode"></div>
+    <button id="showBtn" onclick="showAnswer()">Show the answer</button>
 
-        <div class="hint">
-            Tip: Scan with your phone camera
-        </div>
+    <div class="answer" id="answer"></div>
 
-        <div class="footer">
-            Expeditors | Knowledge & Fun
-        </div>
+    <div class="footer">
+      Refresh the page or scan again for a new question
     </div>
+  </div>
 
-    <script>
-        // =========================
-        // CONFIGURATION
-        // =========================
+<script>
+  // =========================
+  // Questions + Answers
+  // =========================
+  const quiz = [
+    { q: "When was Expeditors founded?", a: "Expeditors was founded in 1979." },
+    { q: "Where is Expeditors headquartered?", a: "Bellevue, Washington, USA." },
+    { q: "What is Expeditors’ mission statement?", a: "To set the standard for excellence in global logistics through total commitment to quality in people and customer service, with superior financial results." },
+    { q: "What type of company is Expeditors?", a: "A service-based global logistics company." },
+    { q: "Does Expeditors own aircraft, ships, or trucks?", a: "No. Expeditors is asset-light and does not own aircraft, ships, or trucks." },
+    { q: "Name one core service provided by Expeditors.", a: "Air freight, ocean freight, customs brokerage, warehousing, or supply chain solutions." },
+    { q: "How many countries does Expeditors operate in?", a: "More than 100 countries worldwide." },
+    { q: "What is one Expeditors core cultural value?", a: "Examples include Integrity, Curiosity, Excellence, Confidence, Pride, Visionary, Attitude, or Resolute." },
+    { q: "What does Integrity represent at Expeditors?", a: "Fairness, honesty, and dignity in all relationships." },
+    { q: "What does Curiosity encourage at Expeditors?", a: "Continuous learning, investigation, and growth." },
+    { q: "What does Excellence mean at Expeditors?", a: "Going beyond what is expected in service and performance." },
+    { q: "Why does Expeditors focus on organic growth?", a: "To preserve culture and grow expertise without mergers." },
+    { q: "What does 'Declare Ownership' mean in practice?", a: "Taking responsibility, acting proactively, and solving problems." },
+    { q: "What is the main focus of Expeditors’ culture?", a: "Exceeding customer expectations." },
+    { q: "Is Expeditors a Fortune 500 company?", a: "Yes, Expeditors is a Fortune 500 company." },
+    { q: "What type of career growth does Expeditors encourage?", a: "Internal development and promotion from within." },
+    { q: "What is a key characteristic of Expeditors leadership?", a: "Long tenure and strong internal experience." },
+    { q: "Why do customers choose Expeditors?", a: "Reliable service, global reach, and logistics expertise." },
+    { q: "What industry does Expeditors operate in?", a: "Global logistics and supply chain management." },
+    { q: "What mindset supports success at Expeditors?", a: "Ownership, accountability, and customer focus." }
+  ];
 
-        // ✅ Replace this with your real answer link
-        // Examples:
-        // - Microsoft Forms link
-        // - SharePoint page
-        // - Simple internal web page
-        const ANSWER_BASE_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=YOUR_FORM_ID";
+  // =========================
+  // Option B: Shuffle-bag (no repeats until all used)
+  // =========================
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
-        // Questions bank
-        const questions = [
-            "What does Expeditors' mission focus on most?",
-            "In which year was Expeditors founded?",
-            "What does the Expeditors culture emphasize?",
-            "What is one key benefit of the Expeditors global network?",
-            "What does 'Service Excellence' mean at Expeditors?",
-            "Which Expeditors value focuses on long-term relationships?",
-            "What industry does Expeditors primarily operate in?"
-        ];
+  let order = JSON.parse(localStorage.getItem("quizOrder") || "null");
+  let pos = parseInt(localStorage.getItem("quizPos") || "0", 10);
 
-        // =========================
-        // LOGIC
-        // =========================
+  // Rebuild if missing or quiz length changed
+  if (!order || order.length !== quiz.length) {
+    order = shuffle([...Array(quiz.length).keys()]);
+    pos = 0;
+  }
 
-        // Pick random question
-        const randomIndex = Math.floor(Math.random() * questions.length);
-        const selectedQuestion = questions[randomIndex];
+  // If reached end, reshuffle new round
+  if (pos >= order.length) {
+    order = shuffle([...Array(quiz.length).keys()]);
+    pos = 0;
+  }
 
-        // Show question
-        document.getElementById("questionText").innerText = selectedQuestion;
+  // Pick next question
+  const index = order[pos];
+  pos++;
 
-        // Encode question in URL (optional, but nice)
-        const encodedQuestion = encodeURIComponent(selectedQuestion);
-        const finalUrl = `${ANSWER_BASE_URL}&question=${encodedQuestion}`;
+  // Persist progress
+  localStorage.setItem("quizOrder", JSON.stringify(order));
+  localStorage.setItem("quizPos", String(pos));
 
-        // Generate QR code
-        new QRCode(document.getElementById("qrcode"), {
-            text: finalUrl,
-            width: 200,
-            height: 200,
-            colorDark: "#002f6c",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    </script>
+  // Render
+  const pick = quiz[index];
+  document.getElementById("question").innerText = pick.q;
+  document.getElementById("answer").innerText = pick.a;
+
+  // Reveal answer (text only)
+  function showAnswer() {
+    document.getElementById("answer").style.display = "block";
+  }
+</script>
 </body>
 </html>
 ``
