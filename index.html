@@ -1,204 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Expeditors Daily Quiz</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Expeditors Daily Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      background:#f3f6fb;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      height:100vh;
-      margin:0;
+<style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #002f6c, #005daa);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
     }
-    .card{
-      background:#fff;
-      padding:32px;
-      max-width:860px;
-      width:92%;
-      border-radius:12px;
-      box-shadow:0 6px 18px rgba(0,0,0,.15);
-      text-align:center;
+
+    .container {
+        background: #ffffff;
+        max-width: 900px;
+        width: 94%;
+        padding: 34px 32px 36px;
+        border-radius: 18px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+        text-align: center;
+        animation: fadeIn 0.6s ease;
     }
-    h1{ color:#002f6c; margin:0 0 16px; }
-    .tag{
-      display:inline-block;
-      margin:0 0 10px;
-      font-size:.85em;
-      color:#002f6c;
-      background:#e8eefb;
-      padding:4px 10px;
-      border-radius:999px;
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .question{
-      font-size:1.25em;
-      line-height:1.6;
-      margin:18px 0 10px;
-      font-weight:700;
+
+    h1 {
+        color: #002f6c;
+        margin: 0 0 14px;
+        font-size: 1.8em;
     }
-    .prompt{
-      margin:10px 0 18px;
-      color:#444;
-      font-size:1.05em;
+
+    .tag {
+        display: inline-block;
+        background: #e9f0fc;
+        color: #002f6c;
+        padding: 6px 14px;
+        font-size: 0.85em;
+        border-radius: 999px;
+        margin-bottom: 16px;
+        font-weight: 600;
     }
-    button{
-      background:#002f6c;
-      color:#fff;
-      border:none;
-      padding:12px 26px;
-      font-size:1em;
-      border-radius:6px;
-      cursor:pointer;
+
+    .question {
+        font-size: 1.35em;
+        font-weight: 700;
+        line-height: 1.6;
+        margin: 22px 0 14px;
     }
-    button:hover{ background:#004a9f; }
-    .answer{
-      display:none;
-      margin-top:20px;
-      padding:16px 18px;
-      background:#eef2ff;
-      border-left:5px solid #002f6c;
-      text-align:left;
-      font-size:1.08em;
-      white-space:pre-line;
-      border-radius:6px;
+
+    .hint {
+        color: #555;
+        margin-bottom: 22px;
+        font-size: 1.05em;
     }
-    .footer{
-      margin-top:22px;
-      font-size:.9em;
-      color:#666;
+
+    .btn {
+        background: #ffcc00;
+        color: #002f6c;
+        border: none;
+        padding: 14px 32px;
+        font-size: 1.05em;
+        font-weight: 700;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.25);
     }
-  </style>
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .answer {
+        display: none;
+        margin-top: 26px;
+        padding: 20px;
+        background: #f4f7fc;
+        border-left: 6px solid #002f6c;
+        border-radius: 10px;
+        text-align: left;
+        font-size: 1.15em;
+        line-height: 1.6;
+    }
+
+    .footer {
+        margin-top: 28px;
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .footer span {
+        font-weight: 600;
+        color: #002f6c;
+    }
+
+    @media (max-width: 600px) {
+        h1 { font-size: 1.5em; }
+        .question { font-size: 1.2em; }
+    }
+</style>
 </head>
 
 <body>
-  <div class="card">
+<div class="container">
     <h1>🚢 Expeditors Knowledge Check</h1>
-    <div id="tag" class="tag" style="display:none;"></div>
+
+    <div id="tag" class="tag"></div>
 
     <div class="question" id="question"></div>
 
-    <div class="prompt">Do you know the answer?</div>
+    <div class="hint">Think about the answer, then tap below 👇</div>
 
-    <button onclick="showAnswer()">Show the answer</button>
+    <button class="btn" onclick="showAnswer()">Reveal the answer</button>
 
     <div class="answer" id="answer"></div>
 
     <div class="footer">
-      Refresh the page or scan again for another question
+        🔄 Scan again or refresh for <span>a new question</span>
     </div>
-  </div>
+</div>
 
 <script>
-  // =========================================================
-  // 1) Build quiz bank (website / investor content aligned)
-  // =========================================================
-  const quizRaw = [
-    { tag:"Leadership", q:"Who is Expeditors’ President and Chief Executive Officer (CEO)?",
-      a:"Daniel R. Wall." },
+/* ============================
+   QUESTIONS (duplicates removed)
+   ============================ */
+const quizRaw = [
+    { tag:"Leadership", q:"Who is Expeditors’ President and Chief Executive Officer (CEO)?", a:"Daniel R. Wall." },
+    { tag:"Business Model", q:"Does Expeditors own aircraft or ships?", a:"No. Expeditors does not own aircraft or ships and operates as an asset‑light third‑party logistics provider." },
+    { tag:"History", q:"When was Expeditors founded?", a:"Expeditors was founded in 1979." },
+    { tag:"Growth", q:"How does Expeditors prefer to grow?", a:"Expeditors states it often prefers to grow organically rather than by acquisition." },
+    { tag:"Company", q:"Is Expeditors a Fortune 500 company?", a:"Yes. Expeditors is a Fortune 500 service‑based logistics company." },
+    { tag:"Investors", q:"What is Expeditors’ stock symbol and exchange?", a:"EXPD on the New York Stock Exchange (NYSE)." },
+    { tag:"Global Reach", q:"How many locations and countries does Expeditors operate in?", a:"Expeditors cites 335+ locations across 100 countries." },
+    { tag:"Culture", q:"Name one cultural value at Expeditors.", a:"Examples include Integrity, Curiosity, Excellence, Pride, Sense of Humor, Visionary, Attitude, Confidence, Appearance, and Resolute." },
+    { tag:"Customer Focus", q:"Why do customers say Expeditors people “care more”?", a:"Expeditors explains this is a deliberate result of its strong culture and values." },
+    { tag:"Technology", q:"What does Expeditors highlight as key to competitive advantage?", a:"Innovative solutions, integrated platforms, and strong data quality." },
+    { tag:"Quality", q:"Quality at Expeditors is supported by whom?", a:"All employees support the Quality Management System (QMS)." },
+    { tag:"Compliance", q:"Why is DG‑trained staff essential?", a:"Because dangerous goods handling must comply with regulations such as IATA DGR and the IMDG Code." },
+    { tag:"District Excellence", q:"What is one element included in District Excellence?", a:"The Balanced Scorecard." }
+];
 
-    { tag:"Business Model", q:"Does Expeditors own aircraft or ships?",
-      a:"No. Expeditors states it does not own aircraft or ships (asset‑light / 3PL model)." },
+/* ============================
+   AUTO DEDUPLICATION
+   ============================ */
+const quiz = Array.from(new Map(quizRaw.map(i => [i.q, i])).values());
 
-    { tag:"History", q:"When was Expeditors founded?",
-      a:"1979." },
-
-    { tag:"Growth", q:"How does Expeditors say it often prefers to grow (annual report)?",
-      a:"Organically rather than by acquisition." },
-
-    { tag:"Company", q:"Is Expeditors a Fortune 500 company?",
-      a:"Yes. Expeditors describes itself as a Fortune 500 service‑based logistics company." },
-
-    { tag:"Investors", q:"What is Expeditors’ stock symbol and exchange (per filings/annual report)?",
-      a:"EXPD on the New York Stock Exchange (NYSE)." },
-
-    { tag:"Global Reach", q:"According to Expeditors’ company overview, how many locations and countries does it cite?",
-      a:"335+ locations in 100 countries." },
-
-    { tag:"Culture", q:"Name one cultural value listed on Expeditors’ culture page.",
-      a:"Examples include Integrity, Curiosity, Excellence, Pride, Sense of Humor, Visionary, Attitude, Confidence, Appearance, Resolute." },
-
-    { tag:"Culture", q:"Expeditors says clients observe their people “care more.” Where is this described?",
-      a:"On Expeditors’ Our Culture page (it explains this is a deliberate outcome of culture and values)." },
-
-    { tag:"Technology", q:"What does Expeditors say is vital to competitive advantage (annual report)?",
-      a:"Innovative solutions, integrated platforms, and data quality." },
-
-    { tag:"Technology", q:"How does Expeditors describe its operating model on About Us?",
-      a:"Customized supply chain solutions supported by unified technology systems integrated across a global network." },
-
-    { tag:"Quality", q:"Quality is supported by whom at Expeditors (per Quality at Expeditors page)?",
-      a:"All employees support the Quality Management System (QMS)." },
-
-    { tag:"Quality", q:"What is a Quality Management System (QMS) according to Expeditors?",
-      a:"A collection of policies, standards, procedures, and guidelines needed to deliver products and services." },
-
-    { tag:"Compliance", q:"Why is DG‑trained staff essential (Expeditors resources alignment)?",
-      a:"Because DG handling must follow relevant dangerous goods regulations (Expeditors links to key DG regulatory resources such as IATA DGR and the IMDG Code)." },
-
-    { tag:"District Excellence", q:"What is one element listed under District Excellence in the Quality at Expeditors overview?",
-      a:"Balanced Scorecard." }
-  ];
-
-  // =========================================================
-  // 2) ELIMINATE DUPLICATES (by question text)
-  //    If a question is repeated, it will only appear once.
-  // =========================================================
-  const quiz = Array.from(
-    new Map(quizRaw.map(item => [item.q.trim(), item])).values()
-  );
-
-  // =========================================================
-  // 3) Option B Shuffle-bag (no repeats until all are used)
-  // =========================================================
-  function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+/* ============================
+   OPTION B – SHUFFLE BAG
+   ============================ */
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    return array;
-  }
+    return arr;
+}
 
-  let order = JSON.parse(localStorage.getItem("quizOrder") || "null");
-  let pos = parseInt(localStorage.getItem("quizPos") || "0", 10);
+let order = JSON.parse(localStorage.getItem("quizOrder") || "null");
+let pos = parseInt(localStorage.getItem("quizPos") || "0", 10);
 
-  // If quiz list changed (including dedupe), reset the cycle cleanly
-  if (!order || order.length !== quiz.length) {
+if (!order || order.length !== quiz.length) {
     order = shuffle([...Array(quiz.length).keys()]);
     pos = 0;
-  }
+}
 
-  // If reached end, reshuffle new round
-  if (pos >= order.length) {
+if (pos >= order.length) {
     order = shuffle([...Array(quiz.length).keys()]);
     pos = 0;
-  }
+}
 
-  // Pick next question in the shuffle order
-  const index = order[pos];
-  pos++;
+const pick = quiz[order[pos]];
+pos++;
 
-  localStorage.setItem("quizOrder", JSON.stringify(order));
-  localStorage.setItem("quizPos", String(pos));
+localStorage.setItem("quizOrder", JSON.stringify(order));
+localStorage.setItem("quizPos", pos);
 
-  const pick = quiz[index];
+/* ============================
+   RENDER
+   ============================ */
+document.getElementById("tag").innerText = pick.tag;
+document.getElementById("question").innerText = pick.q;
+document.getElementById("answer").innerText = pick.a;
 
-  // Render
-  const tagEl = document.getElementById("tag");
-  if (pick.tag) {
-    tagEl.textContent = pick.tag;
-    tagEl.style.display = "inline-block";
-  }
-
-  document.getElementById("question").textContent = pick.q;
-  document.getElementById("answer").textContent = pick.a;
-
-  function showAnswer() {
+function showAnswer() {
     document.getElementById("answer").style.display = "block";
-  }
+}
 </script>
 </body>
 </html>
