@@ -7,7 +7,7 @@
 
   <style>
     body{
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       background:#f3f6fb;
       display:flex;
       justify-content:center;
@@ -18,21 +18,21 @@
     .card{
       background:#fff;
       padding:32px;
-      max-width:760px;
-      width:90%;
+      max-width:820px;
+      width:92%;
       border-radius:12px;
       box-shadow:0 6px 18px rgba(0,0,0,.15);
       text-align:center;
     }
     h1{ color:#002f6c; margin:0 0 16px; }
     .question{
-      font-size:1.3em;
+      font-size:1.25em;
       line-height:1.6;
-      margin:20px 0;
-      font-weight:600;
+      margin:22px 0 10px;
+      font-weight:700;
     }
     .prompt{
-      margin:16px 0;
+      margin:12px 0 18px;
       color:#444;
       font-size:1.05em;
     }
@@ -49,63 +49,86 @@
 
     .answer{
       display:none;
-      margin-top:22px;
-      padding:18px;
-      background:#f0f4ff;
+      margin-top:20px;
+      padding:16px 18px;
+      background:#eef2ff;
       border-left:5px solid #002f6c;
       text-align:left;
-      font-size:1.1em;
+      font-size:1.08em;
       white-space:pre-line;
+      border-radius:6px;
     }
     .footer{
-      margin-top:26px;
+      margin-top:22px;
       font-size:.9em;
       color:#666;
+    }
+    .tag{
+      display:inline-block;
+      margin-top:6px;
+      font-size:.85em;
+      color:#002f6c;
+      background:#e8eefb;
+      padding:4px 10px;
+      border-radius:999px;
     }
   </style>
 </head>
 
 <body>
   <div class="card">
-    <h1>🚢 Expeditors Daily Quiz</h1>
+    <h1>🚢 Expeditors Knowledge Check</h1>
 
+    <div id="tag" class="tag" style="display:none;"></div>
     <div class="question" id="question"></div>
+
     <div class="prompt">Do you know the answer?</div>
 
-    <button id="showBtn" onclick="showAnswer()">Show the answer</button>
+    <button onclick="showAnswer()">Show the answer</button>
 
     <div class="answer" id="answer"></div>
 
     <div class="footer">
-      Refresh the page or scan again for a new question
+      Refresh the page or scan again for another question
     </div>
   </div>
 
 <script>
   // =========================
-  // Questions + Answers
+  // Quiz bank (website-aligned wording)
   // =========================
   const quiz = [
-    { q: "When was Expeditors founded?", a: "Expeditors was founded in 1979." },
-    { q: "Where is Expeditors headquartered?", a: "Bellevue, Washington, USA." },
-    { q: "What is Expeditors’ mission statement?", a: "To set the standard for excellence in global logistics through total commitment to quality in people and customer service, with superior financial results." },
-    { q: "What type of company is Expeditors?", a: "A service-based global logistics company." },
-    { q: "Does Expeditors own aircraft, ships, or trucks?", a: "No. Expeditors is asset-light and does not own aircraft, ships, or trucks." },
-    { q: "Name one core service provided by Expeditors.", a: "Air freight, ocean freight, customs brokerage, warehousing, or supply chain solutions." },
-    { q: "How many countries does Expeditors operate in?", a: "More than 100 countries worldwide." },
-    { q: "What is one Expeditors core cultural value?", a: "Examples include Integrity, Curiosity, Excellence, Confidence, Pride, Visionary, Attitude, or Resolute." },
-    { q: "What does Integrity represent at Expeditors?", a: "Fairness, honesty, and dignity in all relationships." },
-    { q: "What does Curiosity encourage at Expeditors?", a: "Continuous learning, investigation, and growth." },
-    { q: "What does Excellence mean at Expeditors?", a: "Going beyond what is expected in service and performance." },
-    { q: "Why does Expeditors focus on organic growth?", a: "To preserve culture and grow expertise without mergers." },
-    { q: "What does 'Declare Ownership' mean in practice?", a: "Taking responsibility, acting proactively, and solving problems." },
-    { q: "What is the main focus of Expeditors’ culture?", a: "Exceeding customer expectations." },
-    { q: "Is Expeditors a Fortune 500 company?", a: "Yes, Expeditors is a Fortune 500 company." },
-    { q: "What type of career growth does Expeditors encourage?", a: "Internal development and promotion from within." },
-    { q: "What is a key characteristic of Expeditors leadership?", a: "Long tenure and strong internal experience." },
-    { q: "Why do customers choose Expeditors?", a: "Reliable service, global reach, and logistics expertise." },
-    { q: "What industry does Expeditors operate in?", a: "Global logistics and supply chain management." },
-    { q: "What mindset supports success at Expeditors?", a: "Ownership, accountability, and customer focus." }
+    { tag:"Leadership", q:"Do you know who is the current CEO of Expeditors?", a:"Expeditors’ President and Chief Executive Officer is Daniel R. Wall." },
+
+    { tag:"Business Model", q:"Does Expeditors own planes, ships, or trucks?", a:"Expeditors states it does not own aircraft or ships (asset‑light third‑party logistics model)." },
+
+    { tag:"History", q:"When was Expeditors founded?", a:"Expeditors was founded in 1979." },
+
+    { tag:"Growth", q:"How does Expeditors prefer to grow—organically or by acquisition?", a:"Expeditors notes it is often better to grow organically rather than by acquisition." },
+
+    { tag:"Company", q:"Is Expeditors a Fortune 500 company?", a:"Yes. Expeditors describes itself as a Fortune 500 service‑based logistics company." },
+
+    { tag:"Investors", q:"What is Expeditors’ stock symbol and exchange?", a:"EXPD on the New York Stock Exchange (NYSE)." },
+
+    { tag:"Global Reach", q:"How many locations and countries does Expeditors operate in (per Expeditors website)?", a:"Expeditors cites 335+ locations in 100 countries." },
+
+    { tag:"Network", q:"How many district offices does Expeditors operate (per its annual report)?", a:"Expeditors reports 172 district offices." },
+
+    { tag:"Culture", q:"Name one of Expeditors’ cultural values.", a:"Examples include Integrity, Curiosity, Excellence, Pride, Sense of Humor (and others listed on the culture page)." },
+
+    { tag:"Customer Service", q:"Expeditors says customers notice their people “care more.” Where is that explained?", a:"On the Our Culture page, which explains clients observe Expeditors people “care more” as a deliberate result of culture and values." },
+
+    { tag:"Technology", q:"What does Expeditors highlight as vital to competitive advantage (annual report)?", a:"Innovative solutions, integrated platforms, and data quality." },
+
+    { tag:"Technology", q:"How does Expeditors describe its global operation model (About Us)?", a:"Unified technology systems integrated across a global network to deliver customized supply chain solutions." },
+
+    { tag:"Quality", q:"Quality is the responsibility of whom at Expeditors?", a:"Expeditors states all employees support the QMS to ensure satisfaction of customers, service providers, governmental authorities, and each other." },
+
+    { tag:"Compliance", q:"Why is DG‑trained staff essential?", a:"Expeditors references key DG regulatory resources (e.g., IATA Dangerous Goods Regulations and the IMDG Code). DG‑trained staff are essential to apply these requirements correctly for compliant handling and transport." },
+
+    { tag:"Quality", q:"What is a Quality Management System (QMS) according to Expeditors?", a:"A QMS is the collection of business policies, standards, procedures, and guidelines used to deliver operational products and services." },
+
+    { tag:"Internal Program", q:"What is District Excellence and what does it contain?", a:"District Excellence is an internal Expeditors program/framework. Public pages do not provide a detailed component list; refer to internal district/CHQ materials for the official structure." }
   ];
 
   // =========================
@@ -122,32 +145,33 @@
   let order = JSON.parse(localStorage.getItem("quizOrder") || "null");
   let pos = parseInt(localStorage.getItem("quizPos") || "0", 10);
 
-  // Rebuild if missing or quiz length changed
   if (!order || order.length !== quiz.length) {
     order = shuffle([...Array(quiz.length).keys()]);
     pos = 0;
   }
 
-  // If reached end, reshuffle new round
   if (pos >= order.length) {
     order = shuffle([...Array(quiz.length).keys()]);
     pos = 0;
   }
 
-  // Pick next question
   const index = order[pos];
   pos++;
 
-  // Persist progress
   localStorage.setItem("quizOrder", JSON.stringify(order));
   localStorage.setItem("quizPos", String(pos));
 
-  // Render
   const pick = quiz[index];
-  document.getElementById("question").innerText = pick.q;
-  document.getElementById("answer").innerText = pick.a;
 
-  // Reveal answer (text only)
+  const tagEl = document.getElementById("tag");
+  if (pick.tag) {
+    tagEl.textContent = pick.tag;
+    tagEl.style.display = "inline-block";
+  }
+
+  document.getElementById("question").textContent = pick.q;
+  document.getElementById("answer").textContent = pick.a;
+
   function showAnswer() {
     document.getElementById("answer").style.display = "block";
   }
