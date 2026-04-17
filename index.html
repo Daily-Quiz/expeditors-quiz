@@ -18,21 +18,30 @@
     .card{
       background:#fff;
       padding:32px;
-      max-width:820px;
+      max-width:860px;
       width:92%;
       border-radius:12px;
       box-shadow:0 6px 18px rgba(0,0,0,.15);
       text-align:center;
     }
     h1{ color:#002f6c; margin:0 0 16px; }
+    .tag{
+      display:inline-block;
+      margin:0 0 10px;
+      font-size:.85em;
+      color:#002f6c;
+      background:#e8eefb;
+      padding:4px 10px;
+      border-radius:999px;
+    }
     .question{
       font-size:1.25em;
       line-height:1.6;
-      margin:22px 0 10px;
+      margin:18px 0 10px;
       font-weight:700;
     }
     .prompt{
-      margin:12px 0 18px;
+      margin:10px 0 18px;
       color:#444;
       font-size:1.05em;
     }
@@ -46,7 +55,6 @@
       cursor:pointer;
     }
     button:hover{ background:#004a9f; }
-
     .answer{
       display:none;
       margin-top:20px;
@@ -63,23 +71,14 @@
       font-size:.9em;
       color:#666;
     }
-    .tag{
-      display:inline-block;
-      margin-top:6px;
-      font-size:.85em;
-      color:#002f6c;
-      background:#e8eefb;
-      padding:4px 10px;
-      border-radius:999px;
-    }
   </style>
 </head>
 
 <body>
   <div class="card">
     <h1>🚢 Expeditors Knowledge Check</h1>
-
     <div id="tag" class="tag" style="display:none;"></div>
+
     <div class="question" id="question"></div>
 
     <div class="prompt">Do you know the answer?</div>
@@ -94,46 +93,67 @@
   </div>
 
 <script>
-  // =========================
-  // Quiz bank (website-aligned wording)
-  // =========================
-  const quiz = [
-    { tag:"Leadership", q:"Do you know who is the current CEO of Expeditors?", a:"Expeditors’ President and Chief Executive Officer is Daniel R. Wall." },
+  // =========================================================
+  // 1) Build quiz bank (website / investor content aligned)
+  // =========================================================
+  const quizRaw = [
+    { tag:"Leadership", q:"Who is Expeditors’ President and Chief Executive Officer (CEO)?",
+      a:"Daniel R. Wall." },
 
-    { tag:"Business Model", q:"Does Expeditors own planes, ships, or trucks?", a:"Expeditors states it does not own aircraft or ships (asset‑light third‑party logistics model)." },
+    { tag:"Business Model", q:"Does Expeditors own aircraft or ships?",
+      a:"No. Expeditors states it does not own aircraft or ships (asset‑light / 3PL model)." },
 
-    { tag:"History", q:"When was Expeditors founded?", a:"Expeditors was founded in 1979." },
+    { tag:"History", q:"When was Expeditors founded?",
+      a:"1979." },
 
-    { tag:"Growth", q:"How does Expeditors prefer to grow—organically or by acquisition?", a:"Expeditors notes it is often better to grow organically rather than by acquisition." },
+    { tag:"Growth", q:"How does Expeditors say it often prefers to grow (annual report)?",
+      a:"Organically rather than by acquisition." },
 
-    { tag:"Company", q:"Is Expeditors a Fortune 500 company?", a:"Yes. Expeditors describes itself as a Fortune 500 service‑based logistics company." },
+    { tag:"Company", q:"Is Expeditors a Fortune 500 company?",
+      a:"Yes. Expeditors describes itself as a Fortune 500 service‑based logistics company." },
 
-    { tag:"Investors", q:"What is Expeditors’ stock symbol and exchange?", a:"EXPD on the New York Stock Exchange (NYSE)." },
+    { tag:"Investors", q:"What is Expeditors’ stock symbol and exchange (per filings/annual report)?",
+      a:"EXPD on the New York Stock Exchange (NYSE)." },
 
-    { tag:"Global Reach", q:"How many locations and countries does Expeditors operate in (per Expeditors website)?", a:"Expeditors cites 335+ locations in 100 countries." },
+    { tag:"Global Reach", q:"According to Expeditors’ company overview, how many locations and countries does it cite?",
+      a:"335+ locations in 100 countries." },
 
-    { tag:"Network", q:"How many district offices does Expeditors operate (per its annual report)?", a:"Expeditors reports 172 district offices." },
+    { tag:"Culture", q:"Name one cultural value listed on Expeditors’ culture page.",
+      a:"Examples include Integrity, Curiosity, Excellence, Pride, Sense of Humor, Visionary, Attitude, Confidence, Appearance, Resolute." },
 
-    { tag:"Culture", q:"Name one of Expeditors’ cultural values.", a:"Examples include Integrity, Curiosity, Excellence, Pride, Sense of Humor (and others listed on the culture page)." },
+    { tag:"Culture", q:"Expeditors says clients observe their people “care more.” Where is this described?",
+      a:"On Expeditors’ Our Culture page (it explains this is a deliberate outcome of culture and values)." },
 
-    { tag:"Customer Service", q:"Expeditors says customers notice their people “care more.” Where is that explained?", a:"On the Our Culture page, which explains clients observe Expeditors people “care more” as a deliberate result of culture and values." },
+    { tag:"Technology", q:"What does Expeditors say is vital to competitive advantage (annual report)?",
+      a:"Innovative solutions, integrated platforms, and data quality." },
 
-    { tag:"Technology", q:"What does Expeditors highlight as vital to competitive advantage (annual report)?", a:"Innovative solutions, integrated platforms, and data quality." },
+    { tag:"Technology", q:"How does Expeditors describe its operating model on About Us?",
+      a:"Customized supply chain solutions supported by unified technology systems integrated across a global network." },
 
-    { tag:"Technology", q:"How does Expeditors describe its global operation model (About Us)?", a:"Unified technology systems integrated across a global network to deliver customized supply chain solutions." },
+    { tag:"Quality", q:"Quality is supported by whom at Expeditors (per Quality at Expeditors page)?",
+      a:"All employees support the Quality Management System (QMS)." },
 
-    { tag:"Quality", q:"Quality is the responsibility of whom at Expeditors?", a:"Expeditors states all employees support the QMS to ensure satisfaction of customers, service providers, governmental authorities, and each other." },
+    { tag:"Quality", q:"What is a Quality Management System (QMS) according to Expeditors?",
+      a:"A collection of policies, standards, procedures, and guidelines needed to deliver products and services." },
 
-    { tag:"Compliance", q:"Why is DG‑trained staff essential?", a:"Expeditors references key DG regulatory resources (e.g., IATA Dangerous Goods Regulations and the IMDG Code). DG‑trained staff are essential to apply these requirements correctly for compliant handling and transport." },
+    { tag:"Compliance", q:"Why is DG‑trained staff essential (Expeditors resources alignment)?",
+      a:"Because DG handling must follow relevant dangerous goods regulations (Expeditors links to key DG regulatory resources such as IATA DGR and the IMDG Code)." },
 
-    { tag:"Quality", q:"What is a Quality Management System (QMS) according to Expeditors?", a:"A QMS is the collection of business policies, standards, procedures, and guidelines used to deliver operational products and services." },
-
-    { tag:"Internal Program", q:"What is District Excellence and what does it contain?", a:"District Excellence is an internal Expeditors program/framework. Public pages do not provide a detailed component list; refer to internal district/CHQ materials for the official structure." }
+    { tag:"District Excellence", q:"What is one element listed under District Excellence in the Quality at Expeditors overview?",
+      a:"Balanced Scorecard." }
   ];
 
-  // =========================
-  // Option B: Shuffle-bag (no repeats until all used)
-  // =========================
+  // =========================================================
+  // 2) ELIMINATE DUPLICATES (by question text)
+  //    If a question is repeated, it will only appear once.
+  // =========================================================
+  const quiz = Array.from(
+    new Map(quizRaw.map(item => [item.q.trim(), item])).values()
+  );
+
+  // =========================================================
+  // 3) Option B Shuffle-bag (no repeats until all are used)
+  // =========================================================
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -145,16 +165,19 @@
   let order = JSON.parse(localStorage.getItem("quizOrder") || "null");
   let pos = parseInt(localStorage.getItem("quizPos") || "0", 10);
 
+  // If quiz list changed (including dedupe), reset the cycle cleanly
   if (!order || order.length !== quiz.length) {
     order = shuffle([...Array(quiz.length).keys()]);
     pos = 0;
   }
 
+  // If reached end, reshuffle new round
   if (pos >= order.length) {
     order = shuffle([...Array(quiz.length).keys()]);
     pos = 0;
   }
 
+  // Pick next question in the shuffle order
   const index = order[pos];
   pos++;
 
@@ -163,6 +186,7 @@
 
   const pick = quiz[index];
 
+  // Render
   const tagEl = document.getElementById("tag");
   if (pick.tag) {
     tagEl.textContent = pick.tag;
@@ -178,4 +202,3 @@
 </script>
 </body>
 </html>
-``
